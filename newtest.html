@@ -1,0 +1,107 @@
+<html>
+    <head>
+        <title>Создание теста</title>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <div class="wrapper">
+            
+            <div class="headerCard">
+                <select id="selectDirection">
+                </select>
+                <input type="text" name="diplomID" placeholder="Название курса" id="inputName">
+                <input type="text" name="diplomID" placeholder="Стоимость" id="inputPrice">
+                <input type="text" name="diplomID" placeholder="Длительность" id="inputTimer">
+                <input type="text" name="diplomID" placeholder="Описание" id="inputDetail">
+                <textarea cols="40" rows="5" name="diplomID" placeholder="JSON" id="textarea"></textarea>
+                <button class="custom-btn btn-5" onclick="generate()"><span>Сгененрировать шаблон</span></button>
+                <button class="custom-btn btn-5" onclick="createNewCourse()"><span>Сформировать тест</span></button>
+                <button class="custom-btn btn-5" onclick="toHome()"><span>На главную</span></button>
+            </div>
+            
+        </div>
+       
+
+    </body>
+    <script id = "generatedQuest" type="text/html">
+        <div class="headerCard">
+            <h2>Введите вопрос и 3 ответа к ним!</h2>
+            <input type="email" name="login" placeholder="Вопрос" id="loginInput"> 
+            <input type="text" name="password" placeholder="Ответ №1" id="passwordInput">
+            <input type="text" name="password" placeholder="Ответ №1" id="passwordInput">
+            <input type="text" name="password" placeholder="Ответ №1" id="passwordInput">
+        </div>
+    </script>
+    <script>
+
+        let selector = document.getElementById("selectDirection");
+        let textarea = document.getElementById("textarea");
+        let inputName = document.getElementById("inputName");
+        let inputPrice = document.getElementById("inputPrice");
+        let inputTimer = document.getElementById("inputTimer");
+        let inputDetail = document.getElementById("inputDetail");
+        const url = new URL("http://95.213.224.23:3000/direction");
+        fetch(url).then(function(response) {
+            response.json().then(function(data) {
+                var loadJson = data;
+                console.log(loadJson)
+                setData(loadJson, selector);
+            });
+        });
+
+
+        function toHome(){
+            window.location.href = 'index.html';
+        }
+
+        function createNewCourse(){
+            var userid = localStorage.getItem("id_user");
+            console.log(JSON.parse(textarea.value))
+            fetch ('http://95.213.224.23:3000/course', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {jsonData: textarea.value, 
+                    id_direction: selector.value, 
+                    timer: inputTimer.value, 
+                    detail: inputDetail.value, 
+                    price: inputPrice.value, 
+                    name: inputName.value,
+                    id_user: userid
+                })
+            });
+            alert("Курс добавлен!");
+        }
+
+        function setData(jsonData, container){
+            for (var i = 0; i < jsonData.length; i++){
+                var option = document.createElement("option");
+                option.setAttribute("value", jsonData[i].id_direction)
+                var data = jsonData[i].name;
+                console.log(data);
+                option.innerHTML = data;
+                container.appendChild(option)
+                console.log(jsonData[i])
+            }
+        }
+
+        function generate(){
+            var JSON_example = [{
+                "question": "Такой-то вопрос",
+                "answers": ["Правильный вариант", "Неверный", "Неверный"]
+                },{
+                "question": "Такой-то вопрос",
+                "answers": ["Правильный вариант", "Неверный", "Неверный"]
+                }
+            
+            ];
+            textarea.innerHTML = JSON.stringify(JSON_example, null, '\t');
+
+            console.log(JSON_example);
+        }
+
+    </script>
+    
+</html>

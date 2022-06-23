@@ -1,0 +1,555 @@
+<html>
+    <head>
+        <title>Курсы</title>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <div class="support" onclick="gotoSupport()">
+            <img src="icon/customer-service.png" style="width: 60%; position: absolute; left: 20%; top: 15%"/> 
+        </div>
+        <div class="wrapper">
+            
+            <div class="section" id="section">
+                <div>                    
+                   
+                </div>
+                <div id = 'statusDiv'></div>
+                
+            </div>
+            <div class="headerCard">
+                <input type="text" id="diplomID" placeholder="diplomID">
+                <button class="custom-btn btn-5" onclick="checkDiplom()"><span>Проверить диплом</span></button>
+            </div>
+        </div>
+
+        <div id="myModal" class="modal">
+            <div class="container">
+                <div class="card">
+                    <div class="form">
+                        <div class="left-side"> <span class="success"></span>
+                            <div class="image"> <img src="https://imgur.com/QrKJmrf.jpg"> </div>
+                            <div class="debit-card">
+                                <div class="card_name"> <small>Держатель карты</small> <span class="user_name">Бессмертный Данил</span> </div>
+                                <div class="num_expiry">
+                                    <div class="card_number"> <small>Номер карты</small> <span class="set_card_number">0000 0000 0000 0000</span> </div>
+                                    <div class="card_cvv"> <small>Дата</small> <span class="user_card_cvv">MM/YYYY</span> </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right-side">
+                            <h3>Детали оплаты</h3>
+                            <div class="input-text"> <input type="text" id="user_name_input" onkeyup="userName(this.value)" placeholder="Username" require> <span>ФИО держателя</span> </div>
+                            <div class="input-text"> <input type="text" id="user_card_number_input" placeholder="0000 0000 0000 0000" onkeyup="userCardNumber(this.value)" data-slots="0" data-accept="\d" require> <span>Номер карты</span> </div>
+                            <div class="input-div">
+                                <div class="input-text"> <input type="text" onkeyup="usercardcvv(this.value)" placeholder="MM/YYYY" data-slots="MY" require> <span>Срок действия</span> </div>
+                                <div class="input-text "> <input type="text" placeholder="000" data-slots="0" data-accept="\d" size="3" require> <span>CVV</span> </div>
+                            </div>
+                            <button class="custom-btn btn-5" id="payBtn"><span>Оплатить</span></button>
+                            <button class="custom-btn btn-5" onclick="closeModal()"><span>Отменить</span></button> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="myCabinet" class="modal">
+            <div class="container">
+                <div class="card">
+                    <div class="form">
+                        <div class="right-side">
+
+                            <div id="userInfo"></div>
+                            <h3>Дипломы:</h3>
+                            <div id="diplomSpace"> 
+                            </div>
+                            <button class="custom-btn btn-5" onclick="closemyCabinet()"><span>Закрыть</span></button> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </body>
+    
+    <script id = "profile" type="text/html">
+  
+        <div class="welcome">
+             <h1 id="nameH">Здравствуй!</h1>
+             <button class="custom-btn btn-5" onclick="exit()"><span>Выйти из аккаунта</span></button>
+             <button class="custom-btn btn-5" onclick="openmyCabinet()"><span>Личный кабинет</span></button>
+         </div>
+
+    </script>
+
+    <script id = "profileAdmin" type="text/html">
+  
+        <div class="welcome">
+             <h1>Здравствуй, Админ!</h1>
+             <button class="custom-btn btn-5" onclick="gotoFinance()"><span>Финансовый отчет</span></button>
+             <button class="custom-btn btn-5" onclick="exit()"><span>Выйти из кабинета</span></button>
+             <button class="custom-btn btn-5" onclick="gotocreateTest()"><span>Добавить курс</span></button>
+             <button class="custom-btn btn-5" onclick="gotoAdmin()"><span>Управление курсами</span></button>
+             <button class="custom-btn btn-5" onclick="gotoResult()"><span>Ведомость</span></button>
+         </div>
+
+    </script>
+
+    <script id = "welcomeAnon" type="text/html">
+        <div class="headerCard">
+            <h1 >Здравствуй, Аноним!</h1>
+            
+            <button class="tablinks" onclick="openCity(event, 'tabAuth')">Авторизация</button>
+            <button class="tablinks" onclick="openCity(event, 'tabReg')">Регистрация</button>
+            
+            <div class="tabcontent" id="tabAuth">
+                <input type="email" name="login" placeholder="Логин" id="loginInput"> 
+                <input type="password" name="password" placeholder="Пароль" id="passwordInput">
+                <button class="custom-btn btn-5" onclick="login()"><span>Войти</span></button>
+            </div>
+
+            <div class="tabcontent" id="tabReg">
+            
+                <input type="email" name="login" placeholder="Логин" id="loginRegInput"> 
+                <input type="password" name="password" placeholder="Пароль" id="passwordRegInput">
+                <input placeholder="ФИО" id="FIORegInput">
+                <input placeholder="Номер телефона" id="PHONERegInput">
+                <input placeholder="Почта" id="MAILRegInput">
+                <button class="custom-btn btn-5" onclick="register()"><span>Создать аккаунт</span></button>
+            </div>
+        </div>
+    </script>
+
+
+    <script>
+
+        // Get the modal
+        var modal = document.getElementById("myModal");
+        var myCabinet= document.getElementById("myCabinet");
+
+        function openmyCabinet(){
+            myCabinet.style.display = "block";
+        }
+
+        function closemyCabinet(){
+            myCabinet.style.display = "none";
+        }
+
+      
+        function openModal(){
+            modal.style.display = "block";
+        }
+
+        function closeModal(){
+
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+        if (event.target == myCabinet) {
+            myCabinet.style.display = "none";
+        }
+        }
+        
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+        }
+
+        const diplomID = document.getElementById("diplomID");
+
+        function checkDiplom(){
+            let code_id = diplomID.value;
+            openDiplom(code_id); 
+        }
+
+        const url = new URL("http://95.213.224.23:3000/course");
+        
+        var section = document.getElementById("section");
+        
+        json = []
+
+        fetch(url).then(function(response) {
+            response.json().then(function(data) {
+                var loadJson = data;
+                var count = Object.keys(loadJson).length;
+
+                for (var i =0; i<count; i++ ){
+                    json_result = loadJson[i].json_result;
+                    json.push(JSON.parse(json_result));
+                }
+
+                setData(json);
+            });
+        });
+        
+
+
+        
+      
+
+        function setData(json){
+            
+            for (var i = 0; i < json.length; i++){
+                const div = document.createElement('div');
+                div.id = "course";
+                div.className = "courses-container";
+            
+                var data = '<h2>'+json[i].direction+'</h2>'
+                div.innerHTML = data;
+                
+                courseJson = json[i].course;
+                setCourse(courseJson, div);
+                section.appendChild(div);
+            } 
+        }
+                  
+        function setCourse(json, container){
+            for (var i =0; i < json.length; i++){
+                var id = json[i].id; 
+                var price = json[i].price;
+                const div = document.createElement('div');
+                div.className="course";
+                div.setAttribute("onClick", "openCourse("+id+", "+price+")")
+
+                var data = '\
+                    <div class="course-preview">\
+                        <h2>'+json[i].name+'</h2>\
+                    </div>\
+                    <div class="course-info">\
+                        <span>\
+                            '+json[i].detail+'\
+                        </span>\
+                    </div>\
+                    <div class="course-price">\
+                        <div class="element">\
+                            <img src="icon/icons8-money-50.png" width="32px" alt="">\
+                            <span>'+json[i].price+'</span>\
+                        </div>\
+                        <div class="element">\
+                            <img src="icon/icons8-timer-50.png" width="30px" alt="">\
+                            <span>'+json[i].timer+'</span>\
+                        </div>\
+                    </div>\
+                    ';
+                div.innerHTML = data;
+                container.appendChild(div);
+            }
+        }
+
+        function gotoResult(){
+            window.location.href = 'result.html';
+        }
+
+        function gotoSupport(){
+            window.location.href = 'support.html';
+        }
+
+        function gotoAdmin(){
+            window.location.href = 'admin.html';
+        }
+
+        function gotocreateTest(){
+            window.location.href = 'newtest.html';
+        }
+
+        function gotoFinance(){
+            window.location.href = 'finance.html';
+        }
+
+        function gotoCourse(){
+            id_course = localStorage.getItem("id_course");
+            price = localStorage.getItem("price");
+            id_user = localStorage.getItem("id_user");
+
+            console.log(id_user, price, id_course);
+            fetch ('http://95.213.224.23:3000/finance', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {id_user: id_user,
+                    id_course: id_course, 
+                    price: price})
+            });
+            
+            setTimeout(toTest(), 10000);
+        }
+
+        function toTest(){
+            window.location.href = 'test.html';
+        }
+
+        function openCourse(id, price){
+            if (localStorage.getItem("login") == 0){
+                alert("Необходимо авторизоваться в системе!");
+            } 
+            if (localStorage.getItem("login") == 2){
+                alert("Прохождение тестов только для пользователей!");
+            } 
+            if (localStorage.getItem("login") == 1){
+                localStorage.setItem("id_course", id);
+                localStorage.setItem("price", price);
+                openModal();
+                //window.location.href = 'test.html';
+            }
+                
+        }
+        let log = localStorage.getItem("login");
+        console.log(log);
+        function checkStatus(){
+            const div = document.createElement('div');
+            const section = document.getElementById('statusDiv');
+            
+            if (localStorage.getItem("login") == 0 || localStorage.getItem("login") == null){
+                console.log("nuuul");
+                div.innerHTML = document.getElementById('welcomeAnon').innerHTML;
+            }
+            if (localStorage.getItem("login") == 2){
+                console.log("admin");
+                div.innerHTML = document.getElementById('profileAdmin').innerHTML;
+            }
+            if (localStorage.getItem("login") == 1) {
+                console.log(localStorage.getItem("name"));
+                div.innerHTML = document.getElementById('profile').innerHTML;
+                setTimeout(setName, 100);
+                
+                setTimeout(getdataOfDiplom, 100);
+            }
+            section.innerHTML = div.innerHTML;
+            
+            
+        }
+
+        function setName(){
+            var nameH = document.getElementById("nameH");
+            nameH.innerHTML = "Здравствуй, " + localStorage.getItem("name");
+        }
+
+        function openDiplom(id_diplom){
+            localStorage.setItem("code", id_diplom);
+            window.open('diplom.html');
+        }
+
+        function getdataOfDiplom(){
+            id_user = localStorage.getItem("id_user");
+            let url = new URL("http://95.213.224.23:3000/result?id_user="+id_user);
+            var diplomSpace = document.getElementById("diplomSpace");
+            var userInfo= document.getElementById("userInfo");
+            
+            const p = document.createElement("p");
+            p.innerHTML = "Номер телефона - " + localStorage.getItem("phone");
+            const p1 = document.createElement("p");
+            p1.innerHTML = "Электронная почта - " + localStorage.getItem("mail");
+            userInfo.appendChild(p1);
+            userInfo.appendChild(p);
+
+
+            fetch(url).then(function(response) {
+                response.json().then(function(data) {
+                    console.log(data);
+                    if (data.length == 0){
+                        const p = document.createElement("p");
+                        p.innerHTML = "У вас не имеется дипломов"
+                        diplomSpace.appendChild(p);
+                    }
+                    else {
+                        const ul = document.createElement("ul");
+                        for (var i=0; i<data.length; i++){
+                            let li = document.createElement("li");
+                            li.setAttribute("onclick", "openDiplom('"+data[i].code+"')");
+                            li.setAttribute('style', "cursor: pointer");
+                            li.innerHTML += "Диплом курса " + data[i].name + " сданный на " + data[i].result + " баллов"
+                            ul.appendChild(li);
+                            console.log(ul);
+                        }
+                        console.log(diplomSpace);
+                        diplomSpace.appendChild(ul);
+
+                    }
+                });
+            });
+        }
+
+
+
+        function exit(){
+            console.log("Пользователь вышел")
+            localStorage.setItem("login", 0);
+            checkStatus();
+        }
+
+        let id_user;
+
+        function register(){
+       
+            var loginInput = document.getElementById("loginRegInput");
+            var passwordInput = document.getElementById("passwordRegInput");
+            var userFIO = document.getElementById("FIORegInput");
+            var userPHONE = document.getElementById("PHONERegInput");
+            var userMAIL = document.getElementById("MAILRegInput");
+
+        
+            fetch ('http://95.213.224.23:3000/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                    login: loginInput.value, 
+                    password: passwordInput.value,
+                    role: 0,
+                    FIO: userFIO.value,
+                    phone: userPHONE.value,
+                    mail: userMAIL.value 
+                })
+            });
+
+            alert("Пользователь зарегестирован!");
+
+        }
+
+        function login(){
+
+            var loginInput = document.getElementById("loginInput");
+            var passwordInput = document.getElementById("passwordInput");
+
+            if (loginInput.value == 'admin' && passwordInput.value == "root") {
+                console.log("Пользователь вошел")
+          
+                checkStatus();
+            } else {
+
+            const urlToUsers =  new URL("http://95.213.224.23:3000/users?login="+loginInput.value+"&pass="+passwordInput.value);
+            fetch(urlToUsers).then(function(response) {
+                response.json().then(function(data) {
+                    if (data.length == 0) {
+                        alert('Неверные данные!')
+                        return
+                    } 
+                    console.log("Пользователь вошел")
+
+                    if (data[0].role == 1) {
+                        localStorage.setItem("login", 2);
+                        localStorage.setItem("name", null);
+                        localStorage.setItem("id_user", data[0].id_user)
+                    }
+                    else {
+                        localStorage.setItem("login", 1);
+                        localStorage.setItem("name", data[0].FIO);
+                        localStorage.setItem("id_user", data[0].id_user);
+                        localStorage.setItem("phone", data[0].phone);
+                        localStorage.setItem("mail", data[0].mail);
+                    }
+                    checkStatus();
+                });
+            });}
+            
+        }
+
+        checkStatus();
+
+        document.addEventListener('DOMContentLoaded', () => {
+        for (const el of document.querySelectorAll("[placeholder][data-slots]")) {
+        const pattern = el.getAttribute("placeholder"),
+        slots = new Set(el.dataset.slots || "_"),
+        prev = (j => Array.from(pattern, (c,i) => slots.has(c)? j=i+1: j))(0),
+        first = [...pattern].findIndex(c => slots.has(c)),
+        accept = new RegExp(el.dataset.accept || "\\d", "g"),
+        clean = input => {
+        input = input.match(accept) || [];
+        return Array.from(pattern, c =>
+        input[0] === c || slots.has(c) ? input.shift() || c : c
+        );
+        },
+        format = () => {
+        const [i, j] = [el.selectionStart, el.selectionEnd].map(i => {
+        i = clean(el.value.slice(0, i)).findIndex(c => slots.has(c));
+        return i<0? prev[prev.length-1]: back? prev[i-1] || first: i; }); el.value=clean(el.value).join``; el.setSelectionRange(i, j); back=false; }; let back=false; el.addEventListener("keydown", (e)=> back = e.key === "Backspace");
+            el.addEventListener("input", format);
+            el.addEventListener("focus", format);
+            el.addEventListener("blur", () => el.value === pattern && (el.value=""));
+            }
+            });
+
+            var user_name = document.querySelector(".user_name");
+            var set_card_number = document.querySelector(".set_card_number");
+            var user_cardcvv = document.querySelector(".user_card_cvv")
+            var user_name_input = document.getElementById("user_name_input");
+            var user_card_number_input= document.getElementById("user_card_number_input");
+            function userName(name){
+
+            user_name.innerHTML = name;
+            }
+
+            function userCardNumber(cardNumber){
+            set_card_number.innerHTML = cardNumber;
+            }
+
+            function usercardcvv(cvv){
+            user_cardcvv.innerHTML=cvv;
+            }
+
+            var card=document.querySelector(".debit-card");
+            var click_pay = document.getElementById("payBtn");
+            var left_side = document.querySelector(".left-side");
+            var right_side = document.querySelector(".right-side");
+            var success = document.querySelector(".success");
+            click_pay.addEventListener('click',function(){
+
+
+            if(!validateform()){
+            return false;
+            }
+            right_side.style.display="none";
+            left_side.classList.toggle('wide');
+            left_side.style.display="block";
+            card.classList.add('d-none');
+            gotoCourse();
+        
+            });
+
+            function validateform(){
+            validate=true;
+            var validate_inputs=document.querySelectorAll(".right-side input");
+
+            validate_inputs.forEach(function(input_valid){
+            input_valid.classList.remove('warning');
+            if(input_valid.hasAttribute('require')){
+            if(input_valid.value.length==0){
+            validate=false;
+            input_valid.classList.add('warning');
+            }
+            }
+            });
+            return validate;
+            }
+
+            function openCity(evt, cityName) {
+            // Declare all variables
+            var i, tabcontent, tablinks;
+
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+            }
+    </script>
+</html>

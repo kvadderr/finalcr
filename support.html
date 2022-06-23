@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <title>Отправить запрос тех.поддержке</title>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <div class="wrapper">
+            
+            <div class="headerCard">
+                <textarea cols="40" rows="5" name="diplomID" placeholder="Текст сообщения" id="textarea"></textarea>
+                <input type="text" placeholder="Ваши контакты" id="data">
+                <button class="custom-btn btn-5" onclick="createNewCourse()"><span>Отправить сообщение</span></button>
+                <button class="custom-btn btn-5" onclick="toHome()"><span>На главную</span></button>
+            </div>
+            
+        </div>
+       
+
+    </body>
+    <script>
+
+        let textarea = document.getElementById("textarea");
+        let data = document.getElementById("data");
+        
+        function toHome(){
+            window.location.href = 'index.html';
+        }
+
+        function createNewCourse(){
+            console.log(JSON.parse(textarea.value))
+            fetch ('http://95.213.224.23:3000/sendSupport', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                    text: textarea.value, 
+                    data: data.value
+                })
+            });
+            alert("Сообщение отправлено! Ожидайте обратной связи");
+        }
+
+        
+    </script>
+    
+</html>

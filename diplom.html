@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <title>Тестирование</title>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <div class="wrapper">
+            
+            <div class="diplom" id="section">
+                <h1 id="name"></h1>
+                <p>Данный диплом подтверждает успешное прохождение тестирования по курсу</p>
+                <p id="course">«Android разработка»</p>
+                <p>на</p>
+                <h2 id="result">89%</h2>
+                <p>Баллов</p>
+                <h2 id="code">2345HFEWF</h2>
+                <p>Код диплома</p>
+            </div>
+        </div>
+    </body>
+    <script>
+        
+        const section = document.getElementById("section");
+        const name = document.getElementById("name");
+        const course = document.getElementById("course");
+        const result = document.getElementById("result");
+        const code = document.getElementById("code");
+
+        function getdataOfDiplom(){
+            code_id = localStorage.getItem("code");
+            console.log(code_id);
+            let url = new URL("http://95.213.224.23:3000/resultcode?code="+code_id);
+            
+
+            fetch(url).then(function(response) {
+                response.json().then(function(data) {
+                    console.log(data);
+                    if (data.length == 0){
+                        const p = document.createElement("p");
+                        p.innerHTML = "ДИПЛОМ НЕ НАЙДЕН"
+                        section.innerHTML = p.innerHTML;
+                    }
+                    else {
+                       name.innerHTML = data[0].FIO;
+                       course.innerHTML = "«" + data[0].name + "»";
+                       result.innerHTML = data[0].result;
+                       code.innerHTML = data[0].code;
+                    }
+                });
+            });
+        }
+
+        getdataOfDiplom();
+
+   </script>
+
+</html>

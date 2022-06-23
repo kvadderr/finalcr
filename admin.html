@@ -1,0 +1,150 @@
+<html>
+    <head>
+        <title>Курсы</title>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <div class="wrapper">
+            
+            <div class="section" id="section">
+                <div id = 'statusDiv'>
+                    <h1>Управление курсами</h1>
+                    <p>Вы можете активировать или деактивировать курсы</p>
+                    <select id="selectCourse">
+                    </select>
+                </div>
+
+                <div class="headerCard">
+                    <select id="selectDirection">
+                    </select>
+                    <input type="text" name="diplomID" placeholder="Название курса" id="inputName"> 
+                    <input type="text" name="diplomID" placeholder="Стоимость" id="inputPrice">
+                    <input type="text" name="diplomID" placeholder="Длительность" id="inputTimer">
+                    <input type="text" name="diplomID" placeholder="Описание" id="inputDetail">
+                    <input type="checkbox" id="visibleStatus" style="width: auto; margin-left: 20px;"><label for="visibleStatus">Видимость</label><br>
+                    <button class="custom-btn btn-5" onclick="updateData()"><span>Обновить данные курса</span></button>
+                    <button class="custom-btn btn-5" onclick="toHome()"><span>На главную</span></button>
+                </div>
+            </div>
+
+    </body>
+<script>
+    const selector = document.getElementById("selectCourse");
+    const selectDirection = document.getElementById("selectDirection");
+    const dataFinance = document.getElementById("dataFinance");
+    let visibleStatus = document.getElementById("visibleStatus");
+    let inputName = document.getElementById("inputName");
+    let inputPrice = document.getElementById("inputPrice");
+    let inputTimer = document.getElementById("inputTimer");
+    let inputDetail = document.getElementById("inputDetail");
+    var userid = localStorage.getItem("id_user");
+    console.log(userid);
+    selector.addEventListener("change", loadData);
+
+        function toHome(){
+          window.location.href = "index.html";
+        }
+
+        let url = new URL("http://95.213.224.23:3000/courseName?id=" + localStorage.getItem("id_user"));
+        fetch(url).then(function(response) {
+            response.json().then(function(data) {
+                var loadJson = data;
+                console.log(loadJson)
+                setData(loadJson, selector);
+            });
+        });
+
+        function updateData(){
+            let check;
+            if (visibleStatus.checked) check = 1;
+            else check = 0;
+            fetch ('http://95.213.224.23:3000/course', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                    visible: check,
+                    id_course: selector.value, 
+                    id_direction: selectDirection.value, 
+                    timer: inputTimer.value, 
+                    detail: inputDetail.value, 
+                    price: inputPrice.value, 
+                    name: inputName.value})
+            });
+            alert("Курс обновлен!");
+        }
+
+        function setData(jsonData, container){
+            let n = '';
+            for (var i = 0; i < jsonData.length; i++){
+                var option = document.createElement("option");
+                option.setAttribute("value", jsonData[i].id_course)
+                var data = jsonData[i].name;
+                console.log(data);
+                option.innerHTML = data;
+                container.appendChild(option)
+                console.log(jsonData[i])
+                n = jsonData[i].id_course;
+            }
+        }
+
+
+        function deleteCourse(){
+            console.log(selector.value);
+        }
+
+
+
+        function loadData(){
+
+            const url = new URL("http://95.213.224.23:3000/direction");
+            fetch(url).then(function(response) {
+                response.json().then(function(data) {
+                    var loadJson = data;
+                    console.log(loadJson)
+                    setData(loadJson, selectDirection);
+                });
+            });
+
+            let id = selector.value;
+
+            let urls = new URL("http://95.213.224.23:3000/courseData?id="+id);
+            fetch(urls).then(function(response) {
+                response.json().then(function(data) {
+                    var loadJson = data;
+                    console.log(loadJson)
+                    selectDirection.value = data[0].id_direction;
+                    inputName.setAttribute("value", data[0].name);
+                    inputDetail.setAttribute("value", data[0].detail);
+                    inputPrice.setAttribute("value", data[0].price);
+                    inputTimer.setAttribute("value", data[0].timer);
+
+                    if (data[0].visible == 1) {
+                        visibleStatus.checked =  true;
+                    } else     visibleStatus.checked = false;
+                    
+
+                });
+            });
+
+
+            function setData(jsonData, container){
+                for (var i = 0; i < jsonData.length; i++){
+                    var option = document.createElement("option");
+                    option.setAttribute("value", jsonData[i].id_direction)
+                    var data = jsonData[i].name;
+                    console.log(data);
+                    option.innerHTML = data;
+                    container.appendChild(option)
+                    console.log(jsonData[i])
+                }
+            }
+
+
+        }
+
+</script>
+    </html>
+    

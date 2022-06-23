@@ -1,0 +1,58 @@
+<html>
+    <head>
+        <title>Курсы</title>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <div class="wrapper">
+            
+            <div class="section" id="section">
+                <h1>Ведомость</h1>
+                <table class="my_table" id="dataFinance">
+                    <tr>
+                      <th>ФИО пользователя</th>
+                      <th>Результат</th>
+                      <th>Курс</th>
+                    </tr>
+                    
+                    
+                  </table>
+            
+                  <button class="custom-btn btn-5" onclick="goHome()"><span>На главную</span></button>
+                </div>
+
+    </body>
+<script>
+
+    const dataFinance = document.getElementById("dataFinance");
+    var userid = localStorage.getItem("id_user");
+    console.log("ID = " + userid);
+
+    function getDataFinance(){
+        let url = new URL("http://95.213.224.23:3000/resultID?id="+userid);
+            fetch(url).then(function(response) {
+                response.json().then(function(data) {
+                    console.log(data);
+                        for (var i=0; i<data.length; i++){
+                            let tr = document.createElement("tr");
+                            tr.innerHTML += "<td>"  + data[i].FIO + "</td><td>"+data[i].res +"</td><td>"+data[i].courseName+"</td>";
+                            
+                            dataFinance.appendChild(tr);
+                        }
+                        console.log(dataFinance);
+
+                    
+                });
+            });
+        }
+
+        getDataFinance();
+
+        function goHome(){
+          window.location.href = "index.html";
+        }
+
+
+</script>
+    </html>
+    
